@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Some default parameters
+RULES_FILE='/etc/upnp-mon/upnp-mon.rules'
+HOSTNAME=$(hostname)
+
+# read the configuration file
+. upnp-mon.conf
+# . /etc/upnp-mon/upnp-mon.conf
+
+# Read content of Upnp server current rules.
+########################################################
+
+UPNP=$(upnpc -l | sed -n -e "
+s/^ desc: \(.*\)/URL . \1/p
+s/^Local.* \([[:digit:].]\+\)/LAN . \1/p
+s/^External.* \([[:digit:].]\+\)/WAN . \1/p
+s/^ *[[:digit:]]* \(UDP\|TCP\) \{1,5\}\([[:digit:]]\{1,5\}\)->\([[:digit:].]\+\):\([[:digit:]]\{1,5\}\) \{1,2\}.*/\1 \2 \3 \4/p
+")
+
+while read PROTOCOL PORT_I ADDRESS PORT_O DESC; do
+  # echo "$PROTOCOL $PORT_I $ADDRESS $PORT_O $DESC"
+
+  # Get current adresses value (WAN, LAN & Server URL)
+  ########################################################
+
+  if [ -z "$PORT_O" ]; then
+    echo "$PROTOCOL $ADDRESS"
+    case "$PROTOCOL" in
+      'URL') URL="$ADDRESS" ;;
+      'LAN') LAN="$ADDRESS" ;;
+      'WAN') WAN="$ADDRESS" ;;
+    esac
+
+  # Remove redirection if set by this host
+  ########################################
+
+  elif [ "$ADDRESS" = "$LAN" ]; then
+    echo "$PROTOCOL $ADDRESS $PORT_I $DESC"
+    # upnpc -u $URL -e ${DESC} by $HOSTNAME -r $PORT $PROTOCOL
+    # upnpc -u $URL -d $LIST
+  fi
+done <<< "$UPNP"
+
+
+# Read local (controle point) rules and setup rules on server.
+###################################################################
+
+while read PORT PROTOCOL DESC; do
+  if [ "$PORT" != '#' ]; then # avoid comments in file
+    CLEANED=$(upnpc -u $URL -d $PORT $PROTOCOL)
+
+    SET=$(upnpc -u $URL -e "${DESC} for $HOSTNAME" -r $PORT $PROTOCOL | sed -n -e "
+    s/^external \([[:digit:].]\+\):\([[:digit:]]\{1,5\}\) \(UDP\|TCP\) is redirected to internal \([[:digit:].]\+\):\([[:digit:]]\{1,5\}\).*/\1 \2 \3 \4 \5/p
+    ")
+  fi
+done < $RULES_FILE

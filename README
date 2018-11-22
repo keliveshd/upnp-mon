@@ -1,0 +1,9 @@
+upnp-mon for Debian
+
+A SysV timer to keep ports open in gateway with upnp
+configuration options are in /etc/upnp-mon/upnp-mon.conf
+rules are in /etc/upnp-mon/upnp-mon.rules
+
+The special dependencies used in this package are:
+
+Depends: miniupnpc, sed, bash

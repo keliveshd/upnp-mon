@@ -1,0 +1,6 @@
+[Unit]
+Description=open & monitor ports in gateway for local service through NAT with uPnP
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/upnp-mon

@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer for upnp-mon
+
+[Timer]
+OnBootSec=1min
+OnCalendar=*:0/2
+Unit=upnp-mon.service
+
+[Install]
+WantedBy=basic.target

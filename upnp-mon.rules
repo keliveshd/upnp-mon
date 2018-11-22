@@ -1,0 +1,5 @@
+# list of ports and protocol to set.
+# <port> <UDP|TCP> [optional description]
+# ex :
+
+# 22 TCP ssh server

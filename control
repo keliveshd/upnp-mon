@@ -1,0 +1,31 @@
+Section: misc
+Priority: optional
+# Homepage: <enter URL here; no default>
+Standards-Version: 3.9.2
+
+Package: upnp-mon
+Version: 0.0.2
+Maintainer: elmatou <elmatou@gmail.com>
+Depends: sed (>=4.2.2), miniupnpc
+Architecture: all
+# Multi-Arch: <one of: foreign|same|allowed>
+Copyright: copyright
+# Changelog: changelog
+Readme: README
+# Links: <pair of space-separated paths; First is path symlink points at, second is filename of link>
+Description: UPnP strategy for nat traversal
+ Open ports and set redirection in uPnP gateway.
+ Intended for server hosting on LAN with external access with dynamic LAN IP
+Files: upnp-mon.conf /etc/upnp-mon/
+  upnp-mon.rules /etc/upnp-mon/
+  upnp-mon.service /lib/systemd/system/
+  upnp-mon.timer /lib/systemd/system/
+  upnp-mon /usr/bin/
+File: postinst
+ #!/bin/sh -e
+ deb-systemd-helper enable upnp-mon.timer
+    exit 0
+File: prerm
+ #!/bin/sh -e
+ deb-systemd-helper disable upnp-mon.timer
+    exit 0

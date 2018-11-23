@@ -5,8 +5,7 @@ RULES_FILE='/etc/upnp-mon/upnp-mon.rules'
 HOSTNAME=$(hostname)
 
 # read the configuration file
-. upnp-mon.conf
-# . /etc/upnp-mon/upnp-mon.conf
+. /etc/upnp-mon/upnp-mon.conf
 
 # Read content of Upnp server current rules.
 ########################################################
@@ -19,8 +18,6 @@ s/^ *[[:digit:]]* \(UDP\|TCP\) \{1,5\}\([[:digit:]]\{1,5\}\)->\([[:digit:].]\+\)
 ")
 
 while read PROTOCOL PORT_I ADDRESS PORT_O DESC; do
-  # echo "$PROTOCOL $PORT_I $ADDRESS $PORT_O $DESC"
-
   # Get current adresses value (WAN, LAN & Server URL)
   ########################################################
 
@@ -33,10 +30,11 @@ while read PROTOCOL PORT_I ADDRESS PORT_O DESC; do
     esac
 
   # Remove redirection if set by this host
+  # Not yet functionnal
   ########################################
 
-  elif [ "$ADDRESS" = "$LAN" ]; then
-    echo "$PROTOCOL $ADDRESS $PORT_I $DESC"
+  # elif [ "$ADDRESS" = "$LAN" ]; then
+    # echo "$PROTOCOL $ADDRESS $PORT_I $DESC"
     # upnpc -u $URL -e ${DESC} by $HOSTNAME -r $PORT $PROTOCOL
     # upnpc -u $URL -d $LIST
   fi

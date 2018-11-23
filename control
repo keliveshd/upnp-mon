@@ -4,7 +4,7 @@ Priority: optional
 Standards-Version: 3.9.2
 
 Package: upnp-mon
-Version: 0.0.2
+Version: 0.0.3
 Maintainer: elmatou <elmatou@gmail.com>
 Depends: sed (>=4.2.2), miniupnpc
 Architecture: all

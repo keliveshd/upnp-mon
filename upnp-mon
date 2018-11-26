@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO allow use of internal and external ports.
+# TODO remove old rules only after setting new ones.
+# TODO allow ipv6
+
 # Some default parameters
 RULES_FILE='/etc/upnp-mon/upnp-mon.rules'
 HOSTNAME=$(hostname)
@@ -14,41 +18,34 @@ UPNP=$(upnpc -l | sed -n -e "
 s/^ desc: \(.*\)/URL . \1/p
 s/^Local.* \([[:digit:].]\+\)/LAN . \1/p
 s/^External.* \([[:digit:].]\+\)/WAN . \1/p
-s/^ *[[:digit:]]* \(UDP\|TCP\) \{1,5\}\([[:digit:]]\{1,5\}\)->\([[:digit:].]\+\):\([[:digit:]]\{1,5\}\) \{1,2\}.*/\1 \2 \3 \4/p
+s/^ *[[:digit:]]* \(UDP\|TCP\) \{1,5\}\([[:digit:]]\{1,5\}\)->\([[:digit:].]\+\):\([[:digit:]]\{1,5\}\) \{1,2\}\(.*\)/\1 \2 \3 \4 \5/p
 ")
 
 while read PROTOCOL PORT_I ADDRESS PORT_O DESC; do
   # Get current adresses value (WAN, LAN & Server URL)
   ########################################################
 
-  if [ -z "$PORT_O" ]; then
-    echo "$PROTOCOL $ADDRESS"
+  if [[ -z $PORT_O ]]; then
     case "$PROTOCOL" in
       'URL') URL="$ADDRESS" ;;
       'LAN') LAN="$ADDRESS" ;;
       'WAN') WAN="$ADDRESS" ;;
     esac
 
-  # Remove redirection if set by this host
-  # Not yet functionnal
+  # Remove redirections if set by upnp-mon for this ip
   ########################################
 
-  # elif [ "$ADDRESS" = "$LAN" ]; then
-    # echo "$PROTOCOL $ADDRESS $PORT_I $DESC"
-    # upnpc -u $URL -e ${DESC} by $HOSTNAME -r $PORT $PROTOCOL
-    # upnpc -u $URL -d $LIST
+  elif [[ $ADDRESS = $LAN ]] && [[ $DESC =~ "by upnp-mon" ]]; then
+    CLEANED=$(upnpc -u $URL -d $PORT_I $PROTOCOL)
   fi
 done <<< "$UPNP"
-
 
 # Read local (controle point) rules and setup rules on server.
 ###################################################################
 
 while read PORT PROTOCOL DESC; do
-  if [ "$PORT" != '#' ]; then # avoid comments in file
-    CLEANED=$(upnpc -u $URL -d $PORT $PROTOCOL)
-
-    SET=$(upnpc -u $URL -e "${DESC} for $HOSTNAME" -r $PORT $PROTOCOL | sed -n -e "
+  if [[ $PORT != '#' ]]; then # avoid comments in file
+    SET=$(upnpc -u $URL -e "${DESC} for $HOSTNAME by upnp-mon" -r $PORT $PROTOCOL | sed -n -e "
     s/^external \([[:digit:].]\+\):\([[:digit:]]\{1,5\}\) \(UDP\|TCP\) is redirected to internal \([[:digit:].]\+\):\([[:digit:]]\{1,5\}\).*/\1 \2 \3 \4 \5/p
     ")
   fi

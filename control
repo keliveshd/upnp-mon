@@ -4,7 +4,7 @@ Priority: optional
 Standards-Version: 3.9.2
 
 Package: upnp-mon
-Version: 0.0.3
+Version: 0.0.4
 Maintainer: elmatou <elmatou@gmail.com>
 Depends: sed (>=4.2.2), miniupnpc
 Architecture: all
@@ -14,8 +14,8 @@ Copyright: copyright
 Readme: README
 # Links: <pair of space-separated paths; First is path symlink points at, second is filename of link>
 Description: UPnP strategy for nat traversal
- Open ports and set redirection in uPnP gateway.
- Intended for server hosting on LAN with external access with dynamic LAN IP
+ Open ports and set redirection in uPnP gateways.
+ Intended for server hosting on LAN with external access.
 Files: upnp-mon.conf /etc/upnp-mon/
   upnp-mon.rules /etc/upnp-mon/
   upnp-mon.service /lib/systemd/system/

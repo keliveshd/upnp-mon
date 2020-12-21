@@ -5,11 +5,11 @@
 # TODO allow ipv6
 
 # Some default parameters
-RULES_FILE='/etc/upnp-mon/upnp-mon.rules'
+RULES_FILE='/upnp-mon/upnp-mon.rules'
 HOSTNAME=$(hostname)
 
 # read the configuration file
-. /etc/upnp-mon/upnp-mon.conf
+. /upnp-mon/upnp-mon.conf
 
 # Read content of Upnp server current rules.
 ########################################################

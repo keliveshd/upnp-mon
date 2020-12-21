@@ -5,7 +5,7 @@
 # TODO allow ipv6
 
 # Some default parameters
-RULES_FILE='/upnp-mon/config/upnp-mon.rules'
+RULES_FILE='/upnp-mon/config/upnp-mon.rules.conf'
 HOSTNAME=$(hostname)
 
 # read the configuration file

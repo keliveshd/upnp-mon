@@ -8,8 +8,8 @@ if [ ! -f "/upnp-mon/config/upnp-mon.rules.conf" ]; then
 fi
 
 if [ ! -f "/upnp-mon/config/cron.conf" ]; then
-#	echo '*  *  *  *  *    bash /upnp-mon/upnp-mon>/upnp-mon/connect.log 2>&1' > /upnp-mon/config/cron.conf
-	echo '0 0/5 *  *  *    bash /upnp-mon/upnp-mon>/upnp-mon/connect.log 2>&1' > /upnp-mon/config/cron.conf
+#	echo '*  *  *  *  *    bash /upnp-mon/upnp-mon>/upnp-mon/config/connect.log 2>&1' > /upnp-mon/config/cron.conf
+	echo '0 0/5 *  *  *    bash /upnp-mon/upnp-mon>/upnp-mon/config/connect.log 2>&1' > /upnp-mon/config/cron.conf
 fi
 
 cp /upnp-mon/config/cron.conf /etc/crontabs/root

@@ -25,6 +25,6 @@ RUN chmod 755 /inotifywait.sh
 WORKDIR /upnp-mon
 VOLUME ["/upnp-mon/config"]
 
-ENTRYPOINT [ "/docker-entrypoint.sh","/inotifywait.sh"]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
-CMD ["tail","-F","/upnp-mon/config/cron.conf"]
+CMD ["bash","-c","/inotifywait.sh"]
